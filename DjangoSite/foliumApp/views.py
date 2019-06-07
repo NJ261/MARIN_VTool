@@ -1,17 +1,17 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import WorldBorder
 from geojson import Polygon
-import geocoder, folium, json
+import folium
 
 from foliumApp.Views.DataProjection import DataProjection
+from foliumApp.Views.DataProcessing import DataProcessing
 
 def index(request):
-    lat, lon = getLocation()
+    lat, lon = DataProcessing().getLocation()
     map = folium.Map(location=[lat, lon], zoom_start=6)
     folium.Marker([lat, lon], tooltip='You are here: {}, {}'.format(lat, lon)).add_to(map)
 
-    canadaData = oneGeoJsonLayer(['Canada'])
+    canadaData = DataProcessing().geoJsonLayer('Canada')
     map = DataProjection(color='black', fillColor='#ffff00').addGeoJsonLayer(map, canadaData, 'Canada - Layer')
 
 
@@ -41,37 +41,3 @@ def index(request):
 
     folium.LayerControl().add_to(map)
     return HttpResponse(map._repr_html_())
-
-# ToDo: move rest of the processing functions to DataProceesing class
-def oneGeoJsonLayer(name):
-    tempList = []
-    for i in range(0, len(name)):
-        ind = WorldBorder.objects.get(name=name[i])
-    return ind.geom.geojson
-
-def jsonDataLayer(name):
-    ind = WorldBorder.objects.get(name=name)
-    tempList = []
-    data = json.loads(ind.geom.json)
-    dataList = data['coordinates']
-    tempList.append(dataList)
-    return tempList
-
-def processedData(data):
-    # remove extra list from data: list of list to list for easy mapping
-    newDataList = []
-
-    for i in range(0, len(data)):
-        for j in range(0, len(data[i])):
-            newDataList.append([item for sublist in data[i][j] for item in sublist])
-
-    # swap lat, lng in a list to match the format
-    for i in range(0, len(newDataList)):
-        for j in range(0, len(newDataList[i])):
-            newDataList[i][j][0], newDataList[i][j][1] = newDataList[i][j][1], newDataList[i][j][0]
-
-    return newDataList
-
-def getLocation():
-    myLocation = geocoder.ip('me')
-    return myLocation.lat, myLocation.lng
