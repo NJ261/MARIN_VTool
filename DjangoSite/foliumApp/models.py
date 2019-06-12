@@ -22,3 +22,27 @@ class WorldBorder(models.Model):
     # Returns the string representation of the model.
     def __str__(self):
         return self.name
+
+class Communities(models.Model):
+    wkb_geometry = models.MultiPolygonField()
+    name = models.CharField(max_length=50, primary_key=True)
+    description = models.TextField(default='NA')
+
+    # ToDo: add relevent info here.
+    '''
+    timestamp = models.DateTimeField()
+    begin = models.DateTimeField()
+    end = models.DateTimeField()
+    altitudemode = models.TextField(default='')
+    tessellate = models.IntegerField()
+    extrude = models.IntegerField()
+    visibility = models.IntegerField()
+    draworder = models.IntegerField()
+    icon = models.TextField()
+    snippet = models.TextField()'''
+
+    class Meta:
+        db_table = 'communities'
+
+    def __str__(self):
+        return self.name

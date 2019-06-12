@@ -71,3 +71,10 @@ class DataProjection:
         folium.PolyLine(data, color=self.color, weight=self.weight, opacity=self.opacity).add_to(featureGroup)
         featureGroup.add_to(map)
         return map
+
+    def drawCommunitiesMarker(self, map, data):
+        featureGroup = folium.FeatureGroup(name='Communities')
+        for i in range(0, len(data)):
+            folium.Marker(location=data[i][1], popup=data[i][0]).add_to(featureGroup)
+        featureGroup.add_to(map)
+        return map
