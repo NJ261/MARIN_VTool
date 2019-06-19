@@ -1,6 +1,8 @@
 from django.contrib.gis.db import models
 
 class WorldBorder(models.Model):
+    # TODO: DB description needed here.
+
     name = models.CharField(max_length=50, primary_key=True)
     area = models.IntegerField()
     pop2005 = models.IntegerField('Population 2005')
@@ -23,12 +25,15 @@ class WorldBorder(models.Model):
     def __str__(self):
         return self.name
 
+
 class Communities(models.Model):
-    wkb_geometry = models.MultiPolygonField()
+    # TODO: DB description needed here.
+
+    geom = models.MultiPolygonField()
     name = models.CharField(max_length=50, primary_key=True)
     description = models.TextField(default='NA')
 
-    # ToDo: add relevent info here.
+    # ToDo: add relevent fields from DB here.
     '''
     timestamp = models.DateTimeField()
     begin = models.DateTimeField()
@@ -43,6 +48,41 @@ class Communities(models.Model):
 
     class Meta:
         db_table = 'communities'
+
+    def __str__(self):
+        return self.name
+
+
+class MarineTrafficData(models.Model):
+    # TODO: DB description needed here.
+
+    name = models.CharField(max_length=50, primary_key=True)
+    geom = models.MultiPolygonField()
+
+    class Meta:
+        db_table = 'marine_traffic_2010_data'
+
+    def __str__(self):
+        return self.name
+
+
+class AllPorts(models.Model):
+    # TODO: DB description needed here.
+
+    country = models.CharField(max_length=100, primary_key=True)
+    port = models.CharField(max_length=100)
+    latitude  = models.FloatField()
+    longitude = models.FloatField()
+    population = models.FloatField()
+    notes = models.CharField(max_length=200)
+    source = models.CharField(max_length=100)
+    contact = models.CharField(max_length=100)
+    date_creat = models.DateTimeField()
+    owner = models.CharField(max_length=100)
+    geom = models.MultiPolygonField()
+
+    class Meta:
+        db_table = 'all_ports'
 
     def __str__(self):
         return self.name

@@ -67,14 +67,33 @@ class DataProjection:
         Folium map object with updated line
         '''
 
-        featureGroup = folium.FeatureGroup(name=lineName)
-        folium.PolyLine(data, color=self.color, weight=self.weight, opacity=self.opacity).add_to(featureGroup)
+        featureGroup = folium.FeatureGroup(name=lineName, show=True)
+        for i in range(0, len(data)):
+            folium.PolyLine(data[i], color=self.color, weight=self.weight, opacity=self.opacity).add_to(featureGroup)
         featureGroup.add_to(map)
+
         return map
 
     def drawCommunitiesMarker(self, map, data):
+        # TODO: need to work here on icon: type, shape, size and color
+
         featureGroup = folium.FeatureGroup(name='Communities')
         for i in range(0, len(data)):
-            folium.Marker(location=data[i][1], popup=data[i][0]).add_to(featureGroup)
+            folium.Marker(location=data[i][1], tooltip='Community Name: {}'.format(data[i][0]), icon=folium.Icon(color='red')).add_to(featureGroup)
+        featureGroup.add_to(map)
+        return map
+
+    def drawPoints(self, map, data):
+
+        kw = {
+            'radius': 5,
+            'color': 'black',
+            'fill': True,
+            'weight': 1,
+            'fill_opacity': 1
+        }
+        featureGroup = folium.FeatureGroup(name='Sample Grids', show=True)
+        for i in range(0, len(data)):
+            folium.CircleMarker([data[i].y, data[i].x], **kw).add_to(featureGroup)
         featureGroup.add_to(map)
         return map
