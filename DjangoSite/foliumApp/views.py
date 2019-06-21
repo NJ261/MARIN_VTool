@@ -1,5 +1,4 @@
-from django.shortcuts import render, render_to_response
-from geojson import Polygon
+from django.shortcuts import render_to_response
 import folium
 
 from foliumApp.Views.DataProjection import DataProjection
@@ -7,22 +6,20 @@ from foliumApp.Views.DataProcessing import DataProcessing
 
 def index(request):
     lat, lon = DataProcessing().getLocation()
-    map = folium.Map(location=[lat, lon], zoom_start=6)
+    map = folium.Map(location=[lat, lon], zoom_start=6, prefer_canvas=True)
     folium.Marker([lat, lon], tooltip='You are here: {}, {}'.format(lat, lon), icon=folium.Icon(color='green')).add_to(map)
 
-    # canadaData = DataProcessing().geoJsonLayer('Canada')
-    # map = DataProjection(color='black', fillColor='#ffff00').addGeoJsonLayer(map, canadaData, 'Canada')
-
     # plotting communities data
-    communitiesData = DataProcessing().communitiesData()
+    communitiesData = DataProcessing().getCommunitiesData()
     map = DataProjection().drawCommunitiesMarker(map, communitiesData)
 
+    # plotting marine 2010 traffic data
     marineTrafficData = DataProcessing().getMarineTrafficData()
     map = DataProjection(weight=2, color='black').drawPolyLine(map, marineTrafficData, 'traffic')
 
-    # sample grids
-    # gridsData = DataProcessing().calculateGrids()
-    # map = DataProjection().drawPoints(map, gridsData)
+    # plotting sample grids
+    gridsData = DataProcessing().getGridsData()
+    map = DataProjection().drawGrids(map, gridsData)
 
     folium.LayerControl().add_to(map)
     map.save('foliumApp/static/index.html')

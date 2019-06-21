@@ -1,4 +1,4 @@
-from foliumApp.models import WorldBorder, Communities, MarineTrafficData, AllPorts
+from foliumApp.models import WorldBorder, Communities, MarineTrafficData, AllPorts, Grids
 
 import geocoder, json
 
@@ -8,39 +8,20 @@ class DataProcessing:
     def __init__(self):
         pass
 
-    def geoJsonLayer(self, layerName):
-        data = WorldBorder.objects.get(name=layerName)
-        return data.geom.geojson
-
-    def swapLatLngInList(self, data):
-        # remove extra list from data: list of list to list for easy mapping
-        newDataList = []
-
-        for i in range(0, len(data)):
-            for j in range(0, len(data[i])):
-                newDataList.append([item for sublist in data[i][j] for item in sublist])
-
-        # TODO: create a function here
-        # swap lat, lng in a list to match the format
-        for i in range(0, len(newDataList)):
-            for j in range(0, len(newDataList[i])):
-                newDataList[i][j][0], newDataList[i][j][1] = newDataList[i][j][1], newDataList[i][j][0]
-
-        return newDataList
-
     def getLocation(self):
         myLocation = geocoder.ip('me')
         return myLocation.lat, myLocation.lng
 
-    def communitiesData(self):
+    def getCommunitiesData(self):
         communitiesList = Communities.objects.values_list('name', 'geom')
         processedData = []
 
+        # TODO: modify code based on convertDataToJson function
         for i in range(0, len(communitiesList)):
             tempDict = json.loads(communitiesList[i][1].json)
             processedData.append([communitiesList[i][0], tempDict['coordinates']])
 
-        # TODO: create a function here
+        # TODO: modify code based on swapLatLngInList function
         # swap lat, lng in a list to match the format
         for i in range(0, len(processedData)):
             processedData[i][1][0], processedData[i][1][1] = processedData[i][1][1], processedData[i][1][0]
@@ -49,49 +30,36 @@ class DataProcessing:
 
     def getMarineTrafficData(self):
         marineTrafficData = MarineTrafficData.objects.values_list()
-        dataList = []
-
-        for i in range(0, len(marineTrafficData)):
-            a = json.loads(marineTrafficData[i][1].json)
-            a = a['coordinates']
-            a = a[0]
-            for i in range(0, len(a)):
-                a[i][0], a[i][1] = a[i][1], a[i][0]
-
-            dataList.append(a)
-        return dataList
+        processedData = self.convertDataToJson(marineTrafficData, -1, 2)
+        return processedData
 
     def getAllPortsData(self):
+        # TODO: process this data and display it on map
         allPortsData = AllPorts.objects.values_list()
         return allPortsData
 
-    def calculateGrids(self):
-        import shapely.geometry
-        import pyproj
+    def getGridsData(self):
+        gridsData = Grids.objects.values_list()
+        processedData = self.convertDataToJson(gridsData, -1, 2)
+        return processedData
 
-        # Set up projections
-        p_ll = pyproj.Proj(init='epsg:4326')
-        p_mt = pyproj.Proj(init='epsg:3857') # metric; same as EPSG:900913
+    def convertDataToJson(self, inputData, dataIndex, loopNumbers):
+        jsonData = []
+        for item in range(0, len(inputData)):
+            tempData = json.loads(inputData[item][dataIndex].json)
+            tempData = tempData['coordinates']
+            tempData = tempData[0]
+            tempData = self.swapLatLngInList(tempData, loopNumbers)
+            jsonData.append(tempData)
+        return jsonData
 
-        # Create corners of rectangle to be transformed to a grid
-        nw = shapely.geometry.Point((-70.0, 40.0))
-        se = shapely.geometry.Point((-50.0, 60.0))
+    def geoJsonLayer(self, layerName):
+        data = WorldBorder.objects.get(name=layerName)
+        return data.geom.geojson
 
-        stepsize = 500000 # 500 km grid step size
-
-        # Project corners to target projection
-        s = pyproj.transform(p_ll, p_mt, nw.x, nw.y) # Transform NW point to 3857
-        e = pyproj.transform(p_ll, p_mt, se.x, se.y) # .. same for SE
-
-        # Iterate over 2D area
-        gridpoints = []
-        x = s[0]
-        while x < e[0]:
-            y = s[1]
-            while y < e[1]:
-                p = shapely.geometry.Point(pyproj.transform(p_mt, p_ll, x, y))
-                gridpoints.append(p)
-                y += stepsize
-            x += stepsize
-
-        return gridpoints
+    def swapLatLngInList(self, data, loopNumbers):
+        if loopNumbers >= 2:
+            for i in range(0, len(data)):
+                self.swapLatLngInList(data[i], loopNumbers - 1)
+                data[i][0], data[i][1] = data[i][1], data[i][0]
+        return data

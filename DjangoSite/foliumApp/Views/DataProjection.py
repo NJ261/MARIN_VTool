@@ -83,17 +83,9 @@ class DataProjection:
         featureGroup.add_to(map)
         return map
 
-    def drawPoints(self, map, data):
+    def drawGrids(self, map, data):
 
-        kw = {
-            'radius': 5,
-            'color': 'black',
-            'fill': True,
-            'weight': 1,
-            'fill_opacity': 1
-        }
-        featureGroup = folium.FeatureGroup(name='Sample Grids', show=True)
-        for i in range(0, len(data)):
-            folium.CircleMarker([data[i].y, data[i].x], **kw).add_to(featureGroup)
+        featureGroup = folium.FeatureGroup(name='Grids')
+        folium.Polygon(data, color=self.color).add_to(featureGroup)
         featureGroup.add_to(map)
         return map

@@ -86,3 +86,22 @@ class AllPorts(models.Model):
 
     def __str__(self):
         return self.name
+
+class Grids(models.Model):
+    # TODO: DB description needed here.
+
+    id = models.IntegerField(primary_key=True)
+    mstrid = models.FloatField()
+    f_p = models.FloatField()
+    f1_p = models.FloatField()
+    f2_p = models.FloatField()
+    f3_p = models.FloatField()
+    f4_p = models.FloatField()
+    grid0_1 = models.FloatField()
+    geom = models.MultiPolygonField()
+
+    class Meta:
+        db_table = 'amtgridv2sub0_1_fsh'
+
+    def __str__(self):
+        return self.id
