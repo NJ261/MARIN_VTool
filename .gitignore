@@ -3,13 +3,13 @@ __pycache__/
 */migrations/*.py
 */migrations/*.pyc
 
-DjangoSite/__pycache__/*.pyc
-foliumApp/__pycache__/*.pyc
-mapnikApp/__pycache__/*.pyc
+DjangoSite/DjangoSite/__pycache__/*.pyc
+DjangoSite/foliumApp/__pycache__/*.pyc
+DjangoSite/mapnikApp/__pycache__/*.pyc
 
 # migrations
-foliumApp/migrations/
-mapnikApp/migrations/
+DjangoSite/foliumApp/migrations/
+DjangoSite/mapnikApp/migrations/
 
 # html file
-foliumApp/static/index.html
+DjangoSite/foliumApp/static/index.html
