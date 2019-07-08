@@ -7,7 +7,7 @@ from foliumApp.Views.DataProcessing import DataProcessing
 def index(request):
     lat, lon = DataProcessing().getLocation()
     map = folium.Map(location=[lat, lon], zoom_start=6, prefer_canvas=True)
-    folium.Marker([lat, lon], tooltip='You are here: {}, {}'.format(lat, lon), icon=folium.Icon(color='green')).add_to(map)
+    folium.Marker([lat, lon], tooltip='Your IP based location: {}, {}'.format(lat, lon), icon=folium.Icon(color='green')).add_to(map)
 
     # plotting communities data
     communitiesData = DataProcessing().getCommunitiesData()
