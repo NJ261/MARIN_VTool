@@ -2,6 +2,7 @@ __pycache__/
 *.pyc
 */migrations/*.py
 */migrations/*.pyc
+.idea/
 
 DjangoSite/DjangoSite/__pycache__/*.pyc
 DjangoSite/foliumApp/__pycache__/*.pyc
