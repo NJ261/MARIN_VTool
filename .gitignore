@@ -4,9 +4,12 @@ __pycache__/
 */migrations/*.pyc
 .idea/
 
+# __pycache__
 DjangoSite/DjangoSite/__pycache__/*.pyc
 DjangoSite/foliumApp/__pycache__/*.pyc
 DjangoSite/mapnikApp/__pycache__/*.pyc
+Scripts/DataProcessing/__pycache__/*.pyc
+Scripts/Algorithms/__pycache__/*.pyc
 
 # migrations
 DjangoSite/foliumApp/migrations/
