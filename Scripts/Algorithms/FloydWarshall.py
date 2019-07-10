@@ -42,5 +42,6 @@ class FloydWarshall:
         for i in range(0, self.vertex):
             print("{:d}".format(i+1), end='') # first left column as headers
             for j in range(0,self.vertex):
-                print("\t{:2d}".format(self.adjacencyMatrix[i][j]), end='')
+                print("\t{:0.2f}".format(self.adjacencyMatrix[i][j]), end='')
             print()
+

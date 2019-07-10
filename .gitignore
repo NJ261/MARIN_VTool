@@ -25,3 +25,6 @@ DjangoSite/mapnikApp/migrations/
 
 # html file
 DjangoSite/foliumApp/static/index.html
+
+#ipynb checkpoints
+Scripts/JupyterNotebooks/.ipynb_checkpoints/
