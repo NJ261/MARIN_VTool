@@ -1,0 +1,6 @@
+<SSHConfig>
+  <username name='temp'/>
+  <host name='temp.com'/>
+  <localPort name='5433' />
+  <remotePort name='5433' />
+</SSHConfig>
