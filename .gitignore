@@ -19,6 +19,9 @@ Scripts/DataProcessing/Tests/__pycache__/*.pyc
 Scripts/Algorithms/__pycache__/*.pyc
 Scripts/Algorithms/Tests/__pycache__/*.pyc
 
+Scripts/DB/__pycache__/*.pyc
+Scripts/DB/Tests/__pycache__/*.pyc
+
 # migrations
 DjangoSite/foliumApp/migrations/
 DjangoSite/mapnikApp/migrations/
@@ -28,3 +31,7 @@ DjangoSite/foliumApp/static/index.html
 
 #ipynb checkpoints
 Scripts/JupyterNotebooks/.ipynb_checkpoints/
+
+# config files
+Scripts/DB/Config/SSHConfig.xml
+Scripts/DB/Config/DBConfig.xml

@@ -1,0 +1,7 @@
+<DBConfig>
+  <host value='localhost'/>
+  <database value='temp'/>
+  <user value='temp' />
+  <password value='temp' />
+  <port value='5432' />
+</DBConfig>

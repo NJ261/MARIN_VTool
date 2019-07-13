@@ -17,7 +17,7 @@ class ReadXMLConfigData:
             data = []
             root = ET.parse(self.inputFile).getroot()
             for child in root:
-                data.append([child.tag, child.get('name')])
+                data.append([child.tag, child.get('value')])
             return data
         except:
             return ('Something wrong with file or file attributes')
