@@ -1,7 +1,7 @@
 | Path | Description |
 | ---- | ----------- |
-| Config/ | Sample xml files for db connection and SSH tunnel |
-| Tests/ | Unit tests |
+| [Config/](Config/) | Sample xml files for db connection and SSH tunnel |
+| [Tests/](Tests/) | Unit tests |
 
 ### SSHTunnel
 Start a new process which create a ssh tunnel.
