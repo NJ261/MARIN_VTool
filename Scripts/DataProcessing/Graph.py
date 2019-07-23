@@ -10,6 +10,13 @@ from collections import defaultdict
 class Graph:
 
     def __init__(self):
+        """
+        self.edges: dict for possible nodes
+                    e.g. {'A': ['B', 'C', 'D'], 'B': ['A', 'C']}
+        self.weights: weights between two nodes (as a tuple)
+                      and tuple as a key to weight.
+                      e.g. {('A', 'B'): 3, ('A', 'C'): 4}
+        """
         self.edges = defaultdict(list)
         self.weights = {}
 

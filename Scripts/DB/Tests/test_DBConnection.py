@@ -17,7 +17,6 @@ class TestDBConnection(unittest.TestCase):
 
     def setUp(self):
         self.dbConnection = DBConnection.DBConnection('../Config/SampleDBConfig.xml')
-        self.errorMsg = ''
 
     @patch('DBConnection.DBConnection.getConnection')
     def test_getConnection(self, mock_getConnection):
