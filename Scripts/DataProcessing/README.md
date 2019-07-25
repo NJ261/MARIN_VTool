@@ -64,3 +64,31 @@ graph = Graph()
 for i in range(0, len(inputData)):
     graph.addEdge(inputData['InputID'][i], inputData['TargetID'][i], inputData['Distance'][i])
 ```
+
+### Remove land from grid cells
+It removes land from on-shore cells and gives the water region.
+
+Here, inputs should be in pandas dataframe (for grids and land data).
+The output will be in pandas dataframe. Also, change CRS for land, it is 'epsg:3571' by default, change it with 'sourceCRS'.
+```python
+import RemoveLandFromGridCells
+
+# geometry should be in wkb_hex format
+land = '' # should be in pandas dataframe
+grids = '' # should be in pandas dataframe
+sourceCRS = 'epsg:4269' # changing CRS for lands
+
+'''
+**kwargs:
+    1. gridsCol: target column for geometry data in grids, default value is 'geom'. 
+    2. landAreaCol: target column for geometry data in land, default value is 'geom'.
+    3. sourceCRS: CRS for land data, default CRS is 'epsg:3571'.
+    4. destCRS: CRS for grids data, default CRS is 'epsg:4269'.
+ 
+'''
+
+removeLndFrmGrids = RemoveLandFromGridCells(grids, land, sourceCRS=sourceCRS)
+
+# output as a pandas dataframe
+processedGrids = removeLndFrmGrids.removeLandFromGridCells()
+```
