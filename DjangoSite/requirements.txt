@@ -1,3 +1,6 @@
 Django==2.2.1
 folium==0.9.1
-json==2.0.9
+psycopg2>=2.7,<3.0
+numpy
+pandas
+geocoder
