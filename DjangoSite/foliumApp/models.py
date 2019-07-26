@@ -101,7 +101,7 @@ class Grids(models.Model):
     geom = models.MultiPolygonField()
 
     class Meta:
-        db_table = 'amtgridv2sub0_1_fsh'
+        db_table = 'amtgrids'
 
     def __str__(self):
         return self.id
