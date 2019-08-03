@@ -79,7 +79,7 @@ class DataProjection:
 
         featureGroup = folium.FeatureGroup(name='Communities')
         for i in range(0, len(data)):
-            folium.Marker(location=data[i][1], tooltip='Community Name: {}'.format(data[i][0]), icon=folium.Icon(color='red')).add_to(featureGroup)
+            folium.Marker(location=data[i][1], tooltip='Community Name: {}'.format(data[i][0]), icon=folium.Icon(color='blue')).add_to(featureGroup)
         featureGroup.add_to(map)
         return map
 

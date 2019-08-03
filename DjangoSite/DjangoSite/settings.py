@@ -56,7 +56,7 @@ ROOT_URLCONF = 'DjangoSite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['mapnikApp/static', 'foliumApp/static'],
+        'DIRS': ['foliumApp/static'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

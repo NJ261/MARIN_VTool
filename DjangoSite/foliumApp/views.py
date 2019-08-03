@@ -1,4 +1,4 @@
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, render
 import folium
 
 from foliumApp.Views.DataProjection import DataProjection
@@ -12,15 +12,8 @@ def index(request):
     # plotting communities data
     communitiesData = DataProcessing().getCommunitiesData()
     map = DataProjection().drawCommunitiesMarker(map, communitiesData)
-
-    # plotting marine 2010 traffic data
-    marineTrafficData = DataProcessing().getMarineTrafficData()
-    map = DataProjection(weight=2, color='black').drawPolyLine(map, marineTrafficData, 'traffic')
-
-    # plotting sample grids
-    gridsData = DataProcessing().getGridsData()
-    map = DataProjection().drawGrids(map, gridsData)
-
     folium.LayerControl().add_to(map)
-    map.save('foliumApp/static/index.html')
-    return render_to_response("index.html")
+
+    context = {'my_map': map, 'defaultValue': 10, 'vesselList': [10,20,30]}
+    map.save('foliumApp/static/mapIndex.html')
+    return render(request, 'index.html', context)
