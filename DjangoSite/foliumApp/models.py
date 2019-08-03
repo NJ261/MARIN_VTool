@@ -25,6 +25,21 @@ class WorldBorder(models.Model):
     def __str__(self):
         return self.name
 
+class Results(models.Model):
+
+    ogc_fid = models.IntegerField(primary_key=True)
+    vesselid = models.CharField(max_length=50)
+    time = models.CharField(max_length=50)
+    lat = models.CharField(max_length=50)
+    lng = models.CharField(max_length=50)
+    remoteindex = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'sampleresults'
+
+    # Returns the string representation of the model.
+    def __str__(self):
+        return self.ogc_fid
 
 class Communities(models.Model):
     # TODO: DB description needed here.

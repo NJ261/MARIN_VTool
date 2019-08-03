@@ -28,6 +28,7 @@ DjangoSite/mapnikApp/migrations/
 
 # html file
 DjangoSite/foliumApp/static/mapIndex.html
+DjangoSite/foliumApp/static/mapResults.html
 
 #ipynb checkpoints
 Scripts/JupyterNotebooks/.ipynb_checkpoints/
