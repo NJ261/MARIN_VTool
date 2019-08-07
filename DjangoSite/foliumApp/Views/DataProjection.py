@@ -68,8 +68,7 @@ class DataProjection:
         '''
 
         featureGroup = folium.FeatureGroup(name=lineName, show=True)
-        for i in range(0, len(data)):
-            folium.PolyLine(data[i], color=self.color, weight=self.weight, opacity=self.opacity).add_to(featureGroup)
+        folium.PolyLine(data, color=self.color, weight=self.weight, opacity=self.opacity).add_to(featureGroup)
         featureGroup.add_to(map)
 
         return map

@@ -170,8 +170,12 @@
 
     <div class="slidecontainer">
         <div class="mbsc-form-group-inset">
+            <form action="/foliumApp/{{ vesselID }}/" method="post" id="form" name="form">
+                {% csrf_token %}
+                <input type="hidden" name="hiddenValue" value="" id="hiddenValue">
+            </form>
             <label>
-                <input type="range" min={{ tempData | first }} max={{ tempData | last }} step={{ stepsValue }} value={{ tempData | first }} class="slider" id="myRange" />
+                <input type="range" min={{ tempData | first }} max={{ tempData | last }} step={{ stepsValue }} value={{ value }} class="slider" id="myRange" />
             </label>
         </div>
         <p>Time: <span id="demo"></span></p>
@@ -203,6 +207,12 @@ output.innerHTML = timeDurationList[sliderValueIndex];
 slider.oninput = function() {
     output.innerHTML = timeDurationList[tempData.indexOf(Number(this.value))];
 }
+
+slider.onmouseup = function () {
+  document.form.hiddenValue.value = document.getElementById("demo").innerHTML;
+  document.getElementById("form").submit();
+}
+
 </script>
 
 </body>

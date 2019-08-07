@@ -39,7 +39,7 @@ class Results(models.Model):
 
     # Returns the string representation of the model.
     def __str__(self):
-        return self.ogc_fid
+        return self.vesselid
 
 class Communities(models.Model):
     # TODO: DB description needed here.

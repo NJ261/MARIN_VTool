@@ -1,4 +1,4 @@
-from foliumApp.models import WorldBorder, Communities, MarineTrafficData, AllPorts, Grids
+from foliumApp.models import WorldBorder, Communities, MarineTrafficData, AllPorts, Grids, Results
 
 import geocoder, json
 
@@ -63,3 +63,29 @@ class DataProcessing:
                 self.swapLatLngInList(data[i], loopNumbers - 1)
                 data[i][0], data[i][1] = data[i][1], data[i][0]
         return data
+
+    def getTimeDuration(self, vesselID):
+        data = []
+        result = Results.objects.filter(vesselid=vesselID)
+        for i in range(0, len(result)):
+            data.append(result[i].time)
+        return data
+
+    def getLocationData(self, vesselID, locationIndex):
+        data = []
+        result = Results.objects.filter(vesselid=vesselID)
+        for i in range(0, locationIndex):
+            data.append([float(result[i].lat), float(result[i].lng)])
+        return data
+
+    def getRemoteIndexColor(self, vesselID, locationIndex):
+        result = Results.objects.filter(vesselid=vesselID)
+        remoteIndex = int(result[locationIndex - 1].remoteindex)
+        if remoteIndex == 1:
+            color = 'darkgreen'
+        elif remoteIndex == 2:
+            color = 'lightred'
+        else:
+            color = 'red'
+        return color
+
