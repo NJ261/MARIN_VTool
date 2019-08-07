@@ -1,4 +1,4 @@
-from foliumApp.models import WorldBorder, Communities, MarineTrafficData, AllPorts, Grids, Results
+from foliumApp.models import Communities, MarineTrafficData, Grids, Results
 
 import geocoder, json
 
@@ -33,11 +33,6 @@ class DataProcessing:
         processedData = self.convertDataToJson(marineTrafficData, -1, 2)
         return processedData
 
-    def getAllPortsData(self):
-        # TODO: process this data and display it on map
-        allPortsData = AllPorts.objects.values_list()
-        return allPortsData
-
     def getGridsData(self):
         gridsData = Grids.objects.values_list()
         processedData = self.convertDataToJson(gridsData, -1, 2)
@@ -52,10 +47,6 @@ class DataProcessing:
             tempData = self.swapLatLngInList(tempData, loopNumbers)
             jsonData.append(tempData)
         return jsonData
-
-    def geoJsonLayer(self, layerName):
-        data = WorldBorder.objects.get(name=layerName)
-        return data.geom.geojson
 
     def swapLatLngInList(self, data, loopNumbers):
         if loopNumbers >= 2:
@@ -89,3 +80,9 @@ class DataProcessing:
             color = 'red'
         return color
 
+    def getVesselNamesList(self):
+        vesselNamesList = []
+        result = Results.objects.order_by().values('vesselid').distinct()
+        for i in range(0, len(result)):
+            vesselNamesList.append(result[i]['vesselid'])
+        return vesselNamesList

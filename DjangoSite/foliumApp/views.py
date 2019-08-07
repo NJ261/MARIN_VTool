@@ -8,14 +8,15 @@ from foliumApp.Views.DataProcessing import DataProcessing
 def index(request):
     lat, lon = DataProcessing().getLocation()
     map = folium.Map(location=[lat, lon], zoom_start=6, prefer_canvas=True)
-    folium.Marker([lat, lon], tooltip='Your IP based location: {}, {}'.format(lat, lon), icon=folium.Icon(color='green')).add_to(map)
+    folium.Marker([lat, lon], tooltip='Your IP based location: {}, {}'.format(lat, lon), icon=folium.Icon(color='cadetblue')).add_to(map)
 
     # plotting communities data
     communitiesData = DataProcessing().getCommunitiesData()
     map = DataProjection().drawCommunitiesMarker(map, communitiesData)
     folium.LayerControl().add_to(map)
 
-    context = {'my_map': map, 'defaultValue': 10, 'vesselList': [10,20,30]}
+    vesselNamesList = DataProcessing().getVesselNamesList()
+    context = {'my_map': map, 'vesselList': vesselNamesList}
     map.save('foliumApp/static/mapIndex.html')
     return render(request, 'index.html', context)
 
@@ -32,8 +33,14 @@ def results(request, vesselID):
         locationIndex = tempData.index(context['value'])
         locationData = DataProcessing().getLocationData(vesselID, locationIndex)
         remoteIndexColor = DataProcessing().getRemoteIndexColor(vesselID, locationIndex)
-        map = folium.Map(location=locationData[-1], zoom_start=8, prefer_canvas=True)
+        map = folium.Map(location=locationData[-1], zoom_start=7, prefer_canvas=True)
         DataProjection(color='black', weight=4).drawPolyLine(map, locationData, vesselID)
         folium.Marker(locationData[-1], tooltip='You are here: {}, {}'.format(locationData[-1][0], locationData[-1][1]), icon=folium.Icon(color=remoteIndexColor)).add_to(map)
+
+        # plotting communities data
+        communitiesData = DataProcessing().getCommunitiesData()
+        map = DataProjection().drawCommunitiesMarker(map, communitiesData)
+        folium.LayerControl().add_to(map)
+
         map.save('foliumApp/static/mapResults.html')
     return render(request, 'result.html', context)
