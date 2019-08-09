@@ -17,6 +17,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('foliumApp/', include('foliumApp.urls')),
+    path('remoteness/admin/', admin.site.urls),
+    path('remoteness/', include('foliumApp.urls')),
 ]

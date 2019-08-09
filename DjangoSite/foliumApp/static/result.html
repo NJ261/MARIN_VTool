@@ -157,7 +157,7 @@
         <nav>
             <ul>
                 <li>
-                    <a href="/foliumApp">Home</a>
+                    <a href="/remoteness">Home</a>
                 </li>
             </ul>
         </nav>
@@ -170,7 +170,7 @@
 
     <div class="slidecontainer">
         <div class="mbsc-form-group-inset">
-            <form action="/foliumApp/{{ vesselID }}/" method="post" id="form" name="form">
+            <form action="/remoteness/{{ vesselID }}/" method="post" id="form" name="form">
                 {% csrf_token %}
                 <input type="hidden" name="hiddenValue" value="" id="hiddenValue">
             </form>
@@ -213,6 +213,11 @@ slider.onmouseup = function () {
   document.getElementById("form").submit();
 }
 
+// slider support for mobile devices
+slider.ontouchend = function () {
+  document.form.hiddenValue.value = document.getElementById("demo").innerHTML;
+  document.getElementById("form").submit();
+}
 </script>
 
 </body>

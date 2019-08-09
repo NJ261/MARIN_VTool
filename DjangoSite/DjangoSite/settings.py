@@ -25,7 +25,7 @@ SECRET_KEY = 'a%jze7w3t(#k0tzdwzjinp5awbi+kcqs==79+83c2kj*!+cv$y'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'marin-research.ca']
 
 
 # Application definition
