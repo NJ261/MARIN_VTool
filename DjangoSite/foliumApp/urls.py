@@ -7,6 +7,7 @@ urlpatterns = [
     path('<int:vesselID>/', views.results, name='results'),
     path('maps/', TemplateView.as_view(template_name="mapIndex.html"), name='maps'),
     path('mapsResult/', TemplateView.as_view(template_name="mapResults.html"), name='mapsResult'),
+    path('about/', TemplateView.as_view(template_name="about.html"), name='about'),
 ]
 
 
