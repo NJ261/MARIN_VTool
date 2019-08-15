@@ -21,7 +21,6 @@ class IRemoveLandFromGridCells:
         landData = self.getGridsLandData.getLandData()
         self.removeLandFromGridCells = RemoveLandFromGridCells.RemoveLandFromGridCells(gridsData, landData)
         gridsData = self.removeLandFromGridCells.removeLandFromGridCells()
-        print (gridsData == self.getGridsLandData.getGridsData())
         return gridsData
 
 if __name__ == '__main__':
