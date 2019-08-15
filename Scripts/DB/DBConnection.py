@@ -32,4 +32,4 @@ class DBConnection:
     def closeConnection(self, cursor, connection):
         cursor.close()
         connection.close()
-        return print("Connection closed")
+        return print("DB Connection closed")

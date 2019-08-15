@@ -19,5 +19,5 @@ class ReadXMLConfigData:
             for child in root:
                 data.append([child.tag, child.get('value')])
             return data
-        except:
-            return ('Something wrong with file or file attributes')
+        except Exception as e:
+            print(e)
