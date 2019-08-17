@@ -19,11 +19,13 @@ class IRemoveLandFromGridCells:
     def iRemoveLandFromGridCells(self):
         gridsData = self.getGridsLandData.getGridsData()
         landData = self.getGridsLandData.getLandData()
+        print('Task Started')
         self.removeLandFromGridCells = RemoveLandFromGridCells.RemoveLandFromGridCells(gridsData, landData)
         gridsData = self.removeLandFromGridCells.removeLandFromGridCells()
-        return gridsData
+        gridsData.to_csv('processedGrids.csv', sep=',', encoding='utf-8', index=False)
+        print('Task Completed')
 
 if __name__ == '__main__':
     iRemoveLandFromGridCells = IRemoveLandFromGridCells()
     gridsData = iRemoveLandFromGridCells.iRemoveLandFromGridCells()
-    gridsData.to_csv('processedGrids.csv', sep=',', encoding='utf-8', index=False)
+
