@@ -14,9 +14,10 @@ import GetGridsLandData, RemoveLandFromGridCells
 class IRemoveLandFromGridCells:
 
     def __init__(self):
-        self.getGridsLandData = GetGridsLandData.GetGridsLandData()
+        pass
 
     def iRemoveLandFromGridCells(self):
+        self.getGridsLandData = GetGridsLandData.GetGridsLandData()
         gridsData = self.getGridsLandData.getGridsData()
         landData = self.getGridsLandData.getLandData()
         print('Task Started')
@@ -27,5 +28,5 @@ class IRemoveLandFromGridCells:
 
 if __name__ == '__main__':
     iRemoveLandFromGridCells = IRemoveLandFromGridCells()
-    gridsData = iRemoveLandFromGridCells.iRemoveLandFromGridCells()
+    iRemoveLandFromGridCells.iRemoveLandFromGridCells()
 

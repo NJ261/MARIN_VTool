@@ -16,7 +16,8 @@ class GetGridsLandData:
 
     def getLandData(self):
         landData = []
-        countryList = ['ca', 'us', 'gl']
+        #countryList = ['ca', 'us', 'gl']
+        countryList = ['ca']
         connection = self.dbConnection.getConnection()
         cursor = connection.cursor()
 
@@ -35,7 +36,7 @@ class GetGridsLandData:
         connection = self.dbConnection.getConnection()
         cursor = connection.cursor()
 
-        cursor.execute("select id, mstrid, grid0_1, geom from amtgrids;")
+        cursor.execute("select id, mstrid, grid0_1, geom from amtgrids limit 1000 offset 9000;")
         for row in cursor:
             gridsData.append(row)
 
