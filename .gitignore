@@ -36,3 +36,9 @@ Scripts/JupyterNotebooks/.ipynb_checkpoints/
 # config files
 Scripts/DB/Config/SSHConfig.xml
 Scripts/DB/Config/DBConfig.xml
+
+# Data files
+Scripts/Data/Other/amtgrids.csv
+Scripts/Data/Other/cp_coast_la.csv
+Scripts/Data/Other/nwp_data.csv
+
