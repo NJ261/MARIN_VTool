@@ -12,9 +12,7 @@ import pyproj
 
 class RemoveLandFromGridCells:
 
-    def __init__(self, grids, landArea, **kwargs):
-        self.grids = grids.copy()
-        self.landArea = landArea.copy()
+    def __init__(self, **kwargs):
         self.gridsTargetCol = kwargs.get('gridsCol', 'geom')
         self.landAreaTargetCol = kwargs.get('landAreaCol','geom')
         self.sourceCRS = kwargs.get('sourceCRS', 'epsg:3571')
@@ -23,32 +21,34 @@ class RemoveLandFromGridCells:
                                pyproj.Proj(init=self.sourceCRS), #source co-ordinate system
                                pyproj.Proj(init=self.destinationCRS)) # destination co-ordinate system
 
-    def removeLandFromGridCells(self):
+    def removeLandFromGridCells(self, grids, landArea):
+        gridsData = grids.copy()
+        landData = landArea.copy()
         try:
-            self.grids.insert(3, 'intersect', False)
-            for j in self.grids.index:
-                singleGridCell = wkb.loads(self.grids[self.gridsTargetCol][j], hex=True) # reading a grid cell in wkb format as a polygon
+            gridsData.insert(3, 'intersect', False)
+            for j in gridsData.index:
+                singleGridCell = wkb.loads(gridsData[self.gridsTargetCol][j], hex=True) # reading a grid cell in wkb format as a polygon
 
-                for i in self.landArea.index:
-                    singlePolygon = wkb.loads(self.landArea[self.landAreaTargetCol][i], hex=True)  # reading co-ordinates in wkb format as a polygon
+                for i in landData.index:
+                    singlePolygon = wkb.loads(landData[self.landAreaTargetCol][i], hex=True)  # reading co-ordinates in wkb format as a polygon
                     singlePolygon = transform(self.project, singlePolygon)  # changing land polygon's CRS to match with grid's CRS
-                    if self.grids['intersect'][j] == False:
+                    if gridsData['intersect'][j] == False:
 
                         # check if grid cell and polygon intercet or not, if yes then it will find difference.
                         if singleGridCell.intersects(singlePolygon) == True:
-                            self.grids.loc[j, 'intersect'] = True
+                            gridsData.loc[j, 'intersect'] = True
                             difference = singleGridCell.difference(singlePolygon)
                             try:
                                 # if difference have more than 1 polygons, it will consider the one which has larger area and drop rest.
                                 if len(difference) >= 1:
-                                    self.grids.loc[j, self.gridsTargetCol] = difference[difference.index(max(difference))].wkb_hex
+                                    gridsData.loc[j, self.gridsTargetCol] = difference[difference.index(max(difference))].wkb_hex
                             except:
                                 # case: where difference has only 1 polygon, it will update it
-                                self.grids.loc[j, self.gridsTargetCol] = difference.wkb_hex
+                                gridsData.loc[j, self.gridsTargetCol] = difference.wkb_hex
                         else:
-                            self.grids.loc[j, self.gridsTargetCol] = self.grids[self.gridsTargetCol][j]
+                            gridsData.loc[j, self.gridsTargetCol] = singleGridCell.wkb_hex
 
         except Exception as e:
             print(e)
 
-        return self.grids
+        return gridsData

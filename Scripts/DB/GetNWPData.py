@@ -26,3 +26,17 @@ class GetNWPData:
         self.dbConnection.closeConnection(cursor, connection)
         nwpData = pd.DataFrame(nwpData, columns=['mmsi', 'elp_sec', 'st_date', 'geom'])
         return nwpData
+
+    def getProcessedNWPdata(self):
+        nwpData = []
+        connection = self.dbConnection.getConnection()
+        cursor = connection.cursor()
+
+        cursor.execute("select * from nwp_data;")
+        for row in cursor:
+            nwpData.append(row)
+
+        self.dbConnection.closeConnection(cursor, connection)
+        columns = ['ogc_fid', 'sourceMMSI', 'targetMMSI', 'sourceDate', 'sourceTime', 'targetDate', 'targetTime', 'sourceLat', 'sourceLng', 'targetLat', 'targetLng']
+        nwpData = pd.DataFrame(nwpData, columns=columns)
+        return nwpData

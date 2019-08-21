@@ -8,6 +8,7 @@ Created on 8/15/19 2:23 AM
 from functools import partial
 from shapely.ops import transform
 from shapely import wkb
+from shapely.geometry import Point
 import pandas as pd
 import pyproj
 
@@ -111,3 +112,35 @@ class NWPDataProcessing:
                                      columns=['sourceMMSI', 'targetMMSI', 'sourceDate', 'sourceTime', 'targetDate',
                                               'targetTime', 'sourceLat', 'sourceLng', 'targetLat', 'targetLng'])
         return processedData
+
+    def mapGridstoNWPData(self, nwpData, gridsData):
+        try:
+            nwpData.insert(11, 'sourceMstrId', '')
+            nwpData.insert(12, 'targetMstrId', '')
+            nwpData.insert(13, 'sourceContains', False)
+            nwpData.insert(14, 'targetContains', False)
+
+            for i in nwpData.index:
+                sourcePoint = Point(float(nwpData['sourceLat'][i]), float(nwpData['sourceLng'][i]))
+                targetPoint = Point(float(nwpData['targetLat'][i]), float(nwpData['targetLng'][i]))
+
+                for j in gridsData.index:
+                    singleCell = wkb.loads(gridsData['geom'][j], hex=True)
+                    if nwpData['sourceFlag'][i] == False:
+                        if singleCell.contains(sourcePoint) == True:
+                            nwpData.loc[i, 'sourceContains'] = True
+                            nwpData.loc[i, 'sourceMstrId'] = gridsData['mstrid'][j]
+
+                    if nwpData['targetFlag'][i] == False:
+                        if singleCell.contains(targetPoint) == True:
+                            nwpData.loc[i, 'targetContains'] = True
+                            nwpData.loc[i, 'targetMstrId'] = gridsData['mstrid'][j]
+
+        except Exception as e:
+            print(e)
+
+        return nwpData
+
+
+    def calculateDistance(self):
+        pass

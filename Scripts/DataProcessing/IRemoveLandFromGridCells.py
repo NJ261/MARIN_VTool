@@ -23,8 +23,8 @@ class IRemoveLandFromGridCells:
         gridsData = gridsData.loc[9000:9999]
 
         print('Task Started')
-        self.removeLandFromGridCells = RemoveLandFromGridCells.RemoveLandFromGridCells(gridsData, landData)
-        gridsData = self.removeLandFromGridCells.removeLandFromGridCells()
+        self.removeLandFromGridCells = RemoveLandFromGridCells.RemoveLandFromGridCells()
+        gridsData = self.removeLandFromGridCells.removeLandFromGridCells(gridsData, landData)
         gridsData.to_csv('processedGrids.csv', sep=',', encoding='utf-8', index=False)
         print('Task Completed')
 
