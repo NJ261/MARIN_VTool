@@ -31,12 +31,13 @@ class GetGridsLandData:
         landData = pd.DataFrame(landData, columns=['id','geom'])
         return landData
 
-    def getGridsData(self):
+    def getGridsData(self, **kwargs):
+        tableName = kwargs.get('tablename', 'amtgrids')
         gridsData = []
         connection = self.dbConnection.getConnection()
         cursor = connection.cursor()
 
-        cursor.execute("select id, mstrid, grid0_1, geom from amtgrids;")
+        cursor.execute("select id, mstrid, grid0_1, geom from {};".format(tableName))
         for row in cursor:
             gridsData.append(row)
 

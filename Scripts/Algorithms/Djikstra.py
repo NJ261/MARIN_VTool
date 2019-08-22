@@ -46,4 +46,5 @@ class Djikstra:
             nextNode = self.shortestPath[self.currentNode][0]
             self.currentNode = nextNode
 
-        return self.path[::-1] # reversing path
+        self.path = self.path[::-1] # reversing path
+        return self.path, self.shortestPath[self.path[-1]][-1] #return path and distance

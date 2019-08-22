@@ -5,12 +5,17 @@ Created on 8/15/19 2:23 AM
 
 @author: nirav
 """
+import sys
+sys.path.insert(0, '../Algorithms/')
+
 from functools import partial
 from shapely.ops import transform
 from shapely import wkb
 from shapely.geometry import Point
 import pandas as pd
 import pyproj
+
+import CSVtoMatrix, Graph, Djikstra
 
 class NWPDataProcessing:
 
@@ -23,6 +28,7 @@ class NWPDataProcessing:
         self.project = partial(pyproj.transform,
                                pyproj.Proj(init=self.sourceCRS), #source co-ordinate system
                                pyproj.Proj(init=self.destinationCRS)) # destination co-ordinate system
+
 
     # filter nwpData: take only values which have more than 6 hrs total duration, reject the rest.
     def filterData(self, inputData):
@@ -49,7 +55,7 @@ class NWPDataProcessing:
                 # inserting last value i.e destination
                 processedData.append(df.loc[df.index[-1]].values.tolist())
 
-                # converting processed list into dataframe and return it with unique MMSI list to the user
+        # converting processed list into dataframe and return it with unique MMSI list to the user
         processedData = pd.DataFrame(processedData, columns=['mmsi', 'elp_sec', 'st_date', 'geom'])
         return processedData, uniqueMMSI
 
@@ -76,6 +82,7 @@ class NWPDataProcessing:
             processedData.loc[processedData.index[i], 'time'] = tempString[1]
         del processedData['st_date']
         return processedData
+
 
     # for each MMSI it finds other MMSI on a given date and time
     # Here, for time: finding values aganist +/- 3 hours duration from a given time (hence, 6 hr total interval) within 2500 km radius
@@ -113,6 +120,7 @@ class NWPDataProcessing:
                                               'targetTime', 'sourceLat', 'sourceLng', 'targetLat', 'targetLng'])
         return processedData
 
+
     def mapGridstoNWPData(self, nwpData, gridsData):
         try:
             nwpData.insert(11, 'sourceMstrId', '')
@@ -138,9 +146,56 @@ class NWPDataProcessing:
 
         except Exception as e:
             print(e)
-
+        del nwpData['sourceContains']
+        del nwpData['targetContains']
         return nwpData
 
 
-    def calculateDistance(self):
-        pass
+    def prepareGraph(self, **kwargs):
+        self.filePath = kwargs.get('filepath','../Data/DistanceMatrix/oneToSixPoints_10x10.csv')
+        graph = Graph.Graph()
+        csvToMatrix = CSVtoMatrix.CSVtoMatrix(self.filePath)
+        gridsData = csvToMatrix.inputData()
+        for i in gridsData.index:
+            graph.addEdge(gridsData['InputID'][i], gridsData['TargetID'][i], gridsData['Distance'][i])
+        return graph
+
+
+    def calculateDistance(self, graph, source, target):
+        djikstra = Djikstra.Djikstra(graph, source, target)
+        path = djikstra.djikstra()
+        return path
+
+
+    def processedNWPDataCalculation(self, mappedNWPData):
+        try:
+            mappedNWPData.insert(13, 'distance', '')
+            mappedNWPData.insert(14, 'minimum', '')
+            mappedNWPData.insert(15, 'predictedPath', '')
+            graph = self.prepareGraph()
+
+            # finding distance
+            for i in mappedNWPData.index:
+                path, distance = self.calculateDistance(graph, mappedNWPData['sourceMstrId'][i], mappedNWPData['targetMstrId'][i])
+                mappedNWPData.loc[i, 'distance'] = float(distance)/1000
+                mappedNWPData.loc[i, 'predictedPath'] = path
+
+            # finding minimum distance: for a vessel on given date and on given time, sets 'minimum' column True
+            uniqueSourceMMSI = list(set(mappedNWPData['sourceMMSI'].values.tolist()))
+            for i in range(0, len(uniqueSourceMMSI)):
+                tempDataFrame = mappedNWPData.loc[mappedNWPData['sourceMMSI'] == uniqueSourceMMSI[i]]
+                uniqueDate = list(set(tempDataFrame['sourceDate'].values.tolist()))
+
+                for j in range(0, len(uniqueDate)):
+                    tempDataFrame = tempDataFrame.loc[tempDataFrame['sourceDate'] == uniqueDate[j]]
+                    uniqueTime = list(set(tempDataFrame['sourceTime'].values.tolist()))
+
+                    for k in range(0, len(uniqueTime)):
+                        tempDataFrame = tempDataFrame.loc[tempDataFrame['sourceTime'] == uniqueTime[k]]
+                        distance = list(set(tempDataFrame['distance'].values.tolist()))
+                        minDistance = min(distance)
+                        mappedNWPData.loc[tempDataFrame.index[tempDataFrame['distance'] == minDistance], 'minimum'] = True
+
+        except Exception as e:
+            print(e)
+        return mappedNWPData

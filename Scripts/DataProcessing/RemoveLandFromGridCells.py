@@ -48,6 +48,7 @@ class RemoveLandFromGridCells:
                         else:
                             gridsData.loc[j, self.gridsTargetCol] = singleGridCell.wkb_hex
 
+            del gridsData['intersect']
         except Exception as e:
             print(e)
 

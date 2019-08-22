@@ -14,7 +14,6 @@ class CSVtoMatrix:
 
     # read input csv file
     def inputData(self):
-        #filePath = '../../../distance_temp.csv'
         data = pd.read_csv(self.filePath)
         return data
 
