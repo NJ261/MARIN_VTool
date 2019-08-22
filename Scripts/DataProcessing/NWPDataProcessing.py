@@ -86,7 +86,7 @@ class NWPDataProcessing:
 
     # for each MMSI it finds other MMSI on a given date and time
     # Here, for time: finding values aganist +/- 3 hours duration from a given time (hence, 6 hr total interval) within 2500 km radius
-    def sortValuesByDateTime(self, filteredData, uniqueMMSI):
+    def sortValuesByDateTime(self, filteredData, uniqueMMSI, communityData):
         processedData = []
         for i in range(0, len(uniqueMMSI)):
             df = filteredData.loc[filteredData['mmsi'] == uniqueMMSI[i]]  ## find all values in dataframe for each mmsi, result will be a new dataframe
@@ -105,7 +105,7 @@ class NWPDataProcessing:
                         # checking hour in 6 hrs duration (+/- 3 hrs each side)
                         if hour - 3 < int(dateDF['time'][k][:2]) < hour + 3:
 
-                            # radius to search mmsi is 2500 km
+                            # radius to search mmsi (vessel to vessel) is 2500 km
                             distance = self.geod.inv(df['lng'][j], df['lat'][j], dateDF['lng'][k], dateDF['lat'][k])
                             if (distance[-1] / 1000) <= 2500:
                                 # storing values in following format: sourceMMSI, targetMMSI, sourceDate, sourceTime, targetDate, targetTime, sourceLat, sourceLng, targetLat, targetLng
@@ -114,6 +114,20 @@ class NWPDataProcessing:
                                                       dateDF['date'][k], dateDF['time'][k],
                                                       df['lat'][j], df['lng'][j],
                                                       dateDF['lat'][k], dateDF['lng'][k]])
+
+                # adding communities which are in radius (2500 km)
+                for l in communityData.index:
+                    community = wkb.loads(communityData['geom'][l], hex=True)
+                    # radius to search mmsi (vessel to Communities) is 2500 km
+                    distance = self.geod.inv(df['lng'][j], df['lat'][j], community.x, community.y)
+                    if (distance[-1] / 1000) <= 2500:
+                        # storing values in following format: sourceMMSI, targetMMSI (community name), sourceDate, sourceTime,
+                                                            # targetDate (empty), targetTime (empty), sourceLat, sourceLng, targetLat, targetLng
+                        processedData.append([df['mmsi'][j], communityData['name'][l],
+                                              df['date'][j], df['time'][j],
+                                              '', '',
+                                              df['lat'][j], df['lng'][j],
+                                              community.x, community.y])
 
         processedData = pd.DataFrame(processedData,
                                      columns=['sourceMMSI', 'targetMMSI', 'sourceDate', 'sourceTime', 'targetDate',
