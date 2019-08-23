@@ -56,3 +56,17 @@ class GetNWPData:
                    'sourceLat', 'sourceLng', 'targetLat', 'targetLng', 'sourceMstrId', 'targetMstrId']
         mappedNWPData = pd.DataFrame(mappedNWPData, columns=columns)
         return mappedNWPData
+
+    def getCommunityData(self):
+        communityData = []
+        connection = self.dbConnection.getConnection()
+        cursor = connection.cursor()
+
+        cursor.execute("select id, name, geom from communities;")
+        for row in cursor:
+            communityData.append(row)
+
+        self.dbConnection.closeConnection(cursor, connection)
+        columns = ['id', 'name', 'geom']
+        communityData = pd.DataFrame(communityData, columns=columns)
+        return communityData

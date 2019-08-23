@@ -19,6 +19,7 @@ class INWPDataProcessing:
 
     def iNWPDataProcessing(self):
         nwpData = self.getNWPData.getNWPData()
+        communityData = self.getNWPData.getCommunityData()
         print('NWPDataProcessing Task: 1/5 completed')
 
         self.nwpDataProcessing = NWPDataProcessing.NWPDataProcessing()
@@ -31,7 +32,7 @@ class INWPDataProcessing:
         nwpData = self.nwpDataProcessing.splitDateTime(nwpData)
         print('NWPDataProcessing Task: 4/5 completed')
 
-        nwpData = self.nwpDataProcessing.sortValuesByDateTime(nwpData, uniqueMMSI)
+        nwpData = self.nwpDataProcessing.sortValuesByDateTime(nwpData, uniqueMMSI, communityData)
         print('NWPDataProcessing Task: 5/5 completed')
         return nwpData
 
