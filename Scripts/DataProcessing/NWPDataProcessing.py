@@ -114,21 +114,21 @@ class NWPDataProcessing:
                                                       dateDF['date'][k], dateDF['time'][k],
                                                       df['lat'][j], df['lng'][j],
                                                       dateDF['lat'][k], dateDF['lng'][k]])
-
+                
                 # adding communities which are in radius (2500 km)
                 for l in communityData.index:
                     community = wkb.loads(communityData['geom'][l], hex=True)
                     # radius to search mmsi (vessel to Communities) is 2500 km
-                    distance = self.geod.inv(df['lng'][j], df['lat'][j], community.x, community.y)
+                    distance = self.geod.inv(df['lat'][j], df['lng'][j], community.x, community.y)
                     if (distance[-1] / 1000) <= 2500:
                         # storing values in following format: sourceMMSI, targetMMSI (community name), sourceDate, sourceTime,
                                                             # targetDate (empty), targetTime (empty), sourceLat, sourceLng, targetLat, targetLng
                         processedData.append([df['mmsi'][j], communityData['name'][l],
                                               df['date'][j], df['time'][j],
-                                              '', '',
+                                              'NA', 'NA',
                                               df['lat'][j], df['lng'][j],
                                               community.x, community.y])
-
+                    
         processedData = pd.DataFrame(processedData,
                                      columns=['sourceMMSI', 'targetMMSI', 'sourceDate', 'sourceTime', 'targetDate',
                                               'targetTime', 'sourceLat', 'sourceLng', 'targetLat', 'targetLng'])

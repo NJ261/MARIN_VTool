@@ -20,7 +20,6 @@ class IRemoveLandFromGridCells:
 
         gridsData = self.getGridsLandData.getGridsData()
         landData = self.getGridsLandData.getLandData()
-        gridsData = gridsData.loc[9000:9999]
 
         print('Task Started')
         self.removeLandFromGridCells = RemoveLandFromGridCells.RemoveLandFromGridCells()

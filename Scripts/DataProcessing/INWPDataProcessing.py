@@ -48,13 +48,19 @@ class INWPDataProcessing:
     def iProcessedNWPDataCalculation(self, mappedNWPData):
         #mappedNWPData = self.getNWPData.getGridsMappedNWPData()
         nwpData = self.nwpDataProcessing.processedNWPDataCalculation(mappedNWPData)
-        nwpData.to_csv('processedNWPData.csv', sep=',', encoding='utf-8', index=False)
+        nwpData.to_csv('processedNWPDataCalculation.csv', sep=',', encoding='utf-8', index=False)
         print('Final NWP Data is ready, written in processedNWPData.csv file')
 
 
 if __name__ == '__main__':
     iNWPDataProcessing = INWPDataProcessing()
     processedNWPData = iNWPDataProcessing.iNWPDataProcessing()
+    processedNWPData.to_csv('processedNWPData.csv', sep=',', encoding='utf-8', index=False)
+    print('processedNWPData.csv COMPLETED')
+
     mappedNWPData = iNWPDataProcessing.iMapGridstoNWPData(processedNWPData)
+    mappedNWPData.to_csv('mappedNWPData.csv', sep=',', encoding='utf-8', index=False)
+    print('mappedNWPData.csv COMPLETED')
+
     iNWPDataProcessing.iProcessedNWPDataCalculation(mappedNWPData)
 
