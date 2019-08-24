@@ -137,10 +137,10 @@ class NWPDataProcessing:
 
     def mapGridstoNWPData(self, nwpData, gridsData):
         try:
-            nwpData.insert(11, 'sourceMstrId', '')
-            nwpData.insert(12, 'targetMstrId', '')
-            nwpData.insert(13, 'sourceContains', False)
-            nwpData.insert(14, 'targetContains', False)
+            nwpData.insert(10, 'sourceMstrId', '')
+            nwpData.insert(11, 'targetMstrId', '')
+            nwpData.insert(12, 'sourceContains', False)
+            nwpData.insert(13, 'targetContains', False)
 
             for i in nwpData.index:
                 sourcePoint = Point(float(nwpData['sourceLat'][i]), float(nwpData['sourceLng'][i]))
@@ -158,10 +158,10 @@ class NWPDataProcessing:
                             nwpData.loc[i, 'targetContains'] = True
                             nwpData.loc[i, 'targetMstrId'] = gridsData['mstrid'][j]
 
+            del nwpData['sourceContains']
+            del nwpData['targetContains']
         except Exception as e:
             print(e)
-        del nwpData['sourceContains']
-        del nwpData['targetContains']
         return nwpData
 
 
