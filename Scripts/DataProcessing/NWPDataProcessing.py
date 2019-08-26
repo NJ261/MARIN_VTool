@@ -163,13 +163,13 @@ class NWPDataProcessing:
                     singleCell = wkb.loads(gridsData['geom'][j], hex=True)
 
                     # checking if grid cell contains source MMSI
-                    if nwpData['sourceFlag'][i] == False:
+                    if nwpData['sourceContains'][i] == False:
                         if singleCell.contains(sourcePoint) == True:
                             nwpData.loc[i, 'sourceContains'] = True
                             nwpData.loc[i, 'sourceMstrId'] = gridsData['mstrid'][j]
 
                     # checking if grid cell contains target MMSI
-                    if nwpData['targetFlag'][i] == False:
+                    if nwpData['targetContains'][i] == False:
                         if singleCell.contains(targetPoint) == True:
                             nwpData.loc[i, 'targetContains'] = True
                             nwpData.loc[i, 'targetMstrId'] = gridsData['mstrid'][j]
