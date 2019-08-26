@@ -8,6 +8,11 @@ Created on 7/16/19 10:58 PM
 from collections import defaultdict
 
 class Graph:
+    '''
+    Description:
+    ------------
+    It creates graph containing nodes and distance for algorithms i.e. Djikstra
+    '''
 
     def __init__(self):
         """

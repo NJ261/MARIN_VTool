@@ -8,6 +8,16 @@ Created on 7/12/19 6:30 PM
 import xml.etree.ElementTree as ET
 
 class ReadXMLConfigData:
+    '''
+    Description:
+    ------------
+    Read XML file and return all values in list
+
+    Parameters:
+    -----------
+    **kwargs :
+             inputFile : input xml file
+    '''
 
     def __init__(self, inputFile):
         self.inputFile = inputFile

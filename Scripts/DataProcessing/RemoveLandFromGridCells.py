@@ -11,6 +11,19 @@ from shapely import wkb
 import pyproj
 
 class RemoveLandFromGridCells:
+    '''
+    Description:
+    ------------
+    It removes land area from the grids
+
+    Parameters:
+    -----------
+    **kwargs :
+             gridsCol : set grid's data geometry column by default it is 'geom'.
+             landAreaCol : set land's data geometry column by default it is 'geom'.
+             sourceCRS : set source projection to change CRS by default it is 'epsg:3978'.
+             destCRS : set destination projection to change CRS by default it is 'epsg:4269'.
+    '''
 
     def __init__(self, **kwargs):
         self.gridsTargetCol = kwargs.get('gridsCol', 'geom')

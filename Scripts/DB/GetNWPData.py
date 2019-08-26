@@ -9,11 +9,19 @@ import pandas as pd
 import DBConnection
 
 class GetNWPData:
+    '''
+    Description:
+    ------------
+    It gets land, grids data from DB and CSV file.
+
+    Note: make sure DB config file is set
+    '''
 
     def __init__(self, **kwargs):
         self.dbConfigFile = kwargs.get('fileName', '../DB/Config/DBConfig.xml')
         self.dbConnection = DBConnection.DBConnection(self.dbConfigFile)
 
+    # get NWP data from db
     def getNWPData(self):
         nwpData = []
         connection = self.dbConnection.getConnection()
@@ -27,6 +35,7 @@ class GetNWPData:
         nwpData = pd.DataFrame(nwpData, columns=['mmsi', 'elp_sec', 'st_date', 'geom'])
         return nwpData
 
+    # get processed NWP data from DB
     def getProcessedNWPdata(self):
         nwpData = []
         connection = self.dbConnection.getConnection()
@@ -42,6 +51,7 @@ class GetNWPData:
         nwpData = pd.DataFrame(nwpData, columns=columns)
         return nwpData
 
+    # get grids mapped NWP data
     def getGridsMappedNWPData(self):
         mappedNWPData = []
         connection = self.dbConnection.getConnection()
@@ -57,6 +67,7 @@ class GetNWPData:
         mappedNWPData = pd.DataFrame(mappedNWPData, columns=columns)
         return mappedNWPData
 
+    # get community data
     def getCommunityData(self):
         communityData = []
         connection = self.dbConnection.getConnection()

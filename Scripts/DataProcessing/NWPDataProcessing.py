@@ -18,6 +18,19 @@ import pyproj
 import CSVtoMatrix, Graph, Djikstra
 
 class NWPDataProcessing:
+    '''
+    Description:
+    ------------
+    Perform following operations on NWP data: processing, mapping of grids to nwp data, distance calculations
+
+    Parameters:
+    -----------
+    **kwargs :
+             gridsCol : set grid's data geometry column by default it is 'geom'.
+             landAreaCol : set land's data geometry column by default it is 'geom'.
+             sourceCRS : set source projection to change CRS by default it is 'epsg:3978'.
+             destCRS : set destination projection to change CRS by default it is 'epsg:4269'.
+    '''
 
     def __init__(self, **kwargs):
         self.gridsTargetCol = kwargs.get('gridsCol', 'geom')
@@ -134,25 +147,28 @@ class NWPDataProcessing:
                                               'targetTime', 'sourceLat', 'sourceLng', 'targetLat', 'targetLng'])
         return processedData
 
-
+    # maps grids data to nwp data i.e. for every source and target vessels it finds respective grids (id)
     def mapGridstoNWPData(self, nwpData, gridsData):
         try:
             nwpData.insert(10, 'sourceMstrId', '')
             nwpData.insert(11, 'targetMstrId', '')
-            nwpData.insert(12, 'sourceContains', False)
-            nwpData.insert(13, 'targetContains', False)
+            nwpData.insert(12, 'sourceContains', False) # flag in dataframe for source MMSI to avoid over-write
+            nwpData.insert(13, 'targetContains', False) # flag in dataframe for target MMSI to avoid over-write
 
             for i in nwpData.index:
-                sourcePoint = Point(float(nwpData['sourceLat'][i]), float(nwpData['sourceLng'][i]))
-                targetPoint = Point(float(nwpData['targetLat'][i]), float(nwpData['targetLng'][i]))
+                sourcePoint = Point(float(nwpData['sourceLat'][i]), float(nwpData['sourceLng'][i])) # single source MMSI location
+                targetPoint = Point(float(nwpData['targetLat'][i]), float(nwpData['targetLng'][i])) # single target MMSI location
 
                 for j in gridsData.index:
                     singleCell = wkb.loads(gridsData['geom'][j], hex=True)
+
+                    # checking if grid cell contains source MMSI
                     if nwpData['sourceFlag'][i] == False:
                         if singleCell.contains(sourcePoint) == True:
                             nwpData.loc[i, 'sourceContains'] = True
                             nwpData.loc[i, 'sourceMstrId'] = gridsData['mstrid'][j]
 
+                    # checking if grid cell contains target MMSI
                     if nwpData['targetFlag'][i] == False:
                         if singleCell.contains(targetPoint) == True:
                             nwpData.loc[i, 'targetContains'] = True
@@ -164,21 +180,25 @@ class NWPDataProcessing:
             print(e)
         return nwpData
 
-
+    # prepare graph for calculation so that we can calculate distance with Djikstra or Floyd-Warshall
     def prepareGraph(self, **kwargs):
+        # filepath: distance calculation data generated with QGIS and processed grids, first centroid were calculated
+        #           then one to six point distance matrix generated, set file path with 'filepath'.
         self.filePath = kwargs.get('filepath','../Data/DistanceMatrix/oneToSixPoints_10x10.csv')
         graph = Graph.Graph()
         csvToMatrix = CSVtoMatrix.CSVtoMatrix(self.filePath)
         gridsData = csvToMatrix.inputData()
+
+        # adding edges for graph i.e. nodes, distance
         for i in gridsData.index:
             graph.addEdge(gridsData['InputID'][i], gridsData['TargetID'][i], gridsData['Distance'][i])
         return graph
 
-
+    # Instantiate Djikstra, which finds minimum distance and path given source and target nodes and graph.
     def calculateDistance(self, graph, source, target):
         djikstra = Djikstra.Djikstra(graph, source, target)
-        path = djikstra.djikstra()
-        return path
+        path, distance = djikstra.djikstra()
+        return path, distance
 
 
     def processedNWPDataCalculation(self, mappedNWPData):

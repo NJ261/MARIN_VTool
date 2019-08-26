@@ -12,6 +12,11 @@ import pandas as pd
 import GetGridsLandData, RemoveLandFromGridCells
 
 class IRemoveLandFromGridCells:
+    '''
+    Description:
+    ------------
+    Interface for RemoveLandFromGrids class and perform operations
+    '''
 
     def __init__(self):
         self.getGridsLandData = GetGridsLandData.GetGridsLandData()

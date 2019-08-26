@@ -9,6 +9,13 @@ import pandas as pd
 import DBConnection
 
 class GetGridsLandData:
+    '''
+    Description:
+    ------------
+    It gets land, grids data from DB and CSV file.
+
+    Note: make sure DB config file is set
+    '''
 
     def __init__(self, **kwargs):
         self.dbConfigFile = kwargs.get('fileName','../DB/Config/DBConfig.xml')
@@ -16,6 +23,7 @@ class GetGridsLandData:
         self.landDataCSV = kwargs.get('landFileName','../Data/Other/cp_coast_la.csv')
         self.gridsDataCSV = kwargs.get('gridsFileName','../Data/Other/amtgrids.csv')
 
+    # get land data and return dataframe
     def getLandData(self):
         landData = []
         countryList = ['ca'] # add other countries here
@@ -31,6 +39,7 @@ class GetGridsLandData:
         landData = pd.DataFrame(landData, columns=['id','geom'])
         return landData
 
+    # get grids data and return dataframe
     def getGridsData(self, **kwargs):
         tableName = kwargs.get('tablename', 'amtgrids')
         gridsData = []
@@ -45,6 +54,7 @@ class GetGridsLandData:
         gridsData = pd.DataFrame(gridsData, columns=['id','mstrid','grid0_1','geom'])
         return gridsData
 
+    # get land data i.e. cp_coast_la from csv file
     def getLandDataFrmCSV(self):
         columns = ['ogc_fid', 'coast', 'coast_id', 'country', 'region', 'water', 'shape_leng', 'shape_area', 'geom']
         removeColumns = ['ogc_fid', 'coast', 'country', 'region', 'water', 'shape_leng', 'shape_area']
@@ -57,6 +67,7 @@ class GetGridsLandData:
 
         return self.landDataCSV
 
+    # get grids data from csv file
     def getGridsDataFrmCSV(self):
         columns = ['id', 'mstrid', 'f_p', 'f1_p', 'f2_p', 'f3_p', 'f4_p', 'grid0_1', 'grid0_25', 'grid0_5', 'geom']
         self.gridsDataCSV = pd.read_csv(self.gridsDataCSV, sep=',', encoding='utf-8', names=columns, index_col=False)

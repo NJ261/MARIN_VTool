@@ -9,6 +9,16 @@ import psycopg2
 import ReadXMLConfigData
 
 class DBConnection:
+    '''
+    Description:
+    ------------
+    get DB connection from xml config file and also close DB connetion.
+
+    Parameters:
+    -----------
+    **kwargs :
+             inputFile : input xml file for DB connection i.e. 'Config/SampleDBConfig.xml'
+    '''
 
     def __init__(self, inputFile):
         self.inputFile = inputFile
@@ -19,6 +29,7 @@ class DBConnection:
         self.password = self.configData[3][1]
         self.port = self.configData[4][1]
 
+    # get DB connection
     def getConnection(self):
         try:
             connection = psycopg2.connect(host=self.host, database=self.database,
@@ -29,6 +40,7 @@ class DBConnection:
             connection = None
         return connection
 
+    # close DB connection
     def closeConnection(self, cursor, connection):
         cursor.close()
         connection.close()

@@ -9,6 +9,16 @@ import subprocess
 import ReadXMLConfigData
 
 class SSHTunnel:
+    '''
+    Description:
+    ------------
+    Start SSH tunnel connection
+
+    Parameters:
+    -----------
+    **kwargs :
+             inputFile : input xml file for config data i.e. 'Config/SampleSSHConfig.xml'
+    '''
 
     def __init__(self, inputFile):
         self.inputFile = inputFile

@@ -12,8 +12,14 @@ import pandas as pd
 import GetNWPData, GetGridsLandData, NWPDataProcessing
 
 class INWPDataProcessing:
+    '''
+    Description:
+    ------------
+    Interface for NWPDataProcessing class and perform operations
+    '''
 
     def __init__(self):
+        # Instantiate objects to get data from DB
         self.getNWPData = GetNWPData.GetNWPData()
         self.getGridsLandData = GetGridsLandData.GetGridsLandData()
 
@@ -36,7 +42,7 @@ class INWPDataProcessing:
         print('NWPDataProcessing Task: 5/5 completed')
         return nwpData
 
-
+    # For mapping grids to processed NWP data
     def iMapGridstoNWPData(self, processedNWPData):
         #processedNWPData = self.getNWPData.getProcessedNWPdata()
         gridsData = self.getGridsLandData.getGridsData(tablename='processedgrids')
@@ -44,7 +50,7 @@ class INWPDataProcessing:
         print('Mapping of Grids to NWP data completed')
         return mappedNWPData
 
-
+    # For finding distance from mappedNWPData
     def iProcessedNWPDataCalculation(self, mappedNWPData):
         #mappedNWPData = self.getNWPData.getGridsMappedNWPData()
         nwpData = self.nwpDataProcessing.processedNWPDataCalculation(mappedNWPData)
