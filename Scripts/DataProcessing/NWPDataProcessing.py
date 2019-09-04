@@ -221,14 +221,14 @@ class NWPDataProcessing:
                 uniqueDate = list(set(tempDataFrame['sourceDate'].values.tolist()))
 
                 for j in range(0, len(uniqueDate)):
-                    tempDataFrame = tempDataFrame.loc[tempDataFrame['sourceDate'] == uniqueDate[j]]
-                    uniqueTime = list(set(tempDataFrame['sourceTime'].values.tolist()))
+                    tempDateFrame = tempDataFrame.loc[tempDataFrame['sourceDate'] == uniqueDate[j]]
+                    uniqueTime = list(set(tempDateFrame['sourceTime'].values.tolist()))
 
                     for k in range(0, len(uniqueTime)):
-                        tempDataFrame = tempDataFrame.loc[tempDataFrame['sourceTime'] == uniqueTime[k]]
-                        distance = list(set(tempDataFrame['distance'].values.tolist()))
+                        tempTimeFrame = tempDateFrame.loc[tempDateFrame['sourceTime'] == uniqueTime[k]]
+                        distance = list(set(tempTimeFrame['distance'].values.tolist()))
                         minDistance = min(distance)
-                        mappedNWPData.loc[tempDataFrame.index[tempDataFrame['distance'] == minDistance], 'minimum'] = True
+                        mappedNWPData.loc[tempTimeFrame.index[tempTimeFrame['distance'] == minDistance], 'minimum'] = True
 
         except Exception as e:
             print(e)

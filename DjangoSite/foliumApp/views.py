@@ -23,23 +23,28 @@ def index(request):
 # result: vessel data
 def results(request, vesselID):
     timeData = DataProcessing().getTimeDuration(vesselID)
-    tempData = list(range(0,101, int(100/len(timeData))))
-    context = {'vesselID': vesselID, 'timeDurationList': timeData, 'tempData': tempData[1:], 'stepsValue': int(100/len(timeData)), 'value':tempData[1]}
+    tempData = [index for index, value in enumerate(timeData)]
+    context = {'vesselID': vesselID, 'timeDurationList': timeData, 'tempData': tempData, 'stepsValue': 1, 'value':tempData[0]}
     try:
-        context['value'] = tempData[int(timeData.index(request.POST['hiddenValue'])+1)]
+        context['value'] = tempData[int(timeData.index(request.POST['hiddenValue']))]
     except:
         pass
     finally:
         locationIndex = tempData.index(context['value'])
-        locationData = DataProcessing().getLocationData(vesselID, locationIndex)
-        remoteIndexColor = DataProcessing().getRemoteIndexColor(vesselID, locationIndex)
-        map = folium.Map(location=locationData[-1], zoom_start=7, prefer_canvas=True)
-        DataProjection(color='black', weight=4).drawPolyLine(map, locationData, vesselID)
-        folium.Marker(locationData[-1], tooltip='You are here: {}, {}'.format(locationData[-1][0], locationData[-1][1]), icon=folium.Icon(color=remoteIndexColor)).add_to(map)
+        communityData, trafficData = DataProcessing().getTrafficData(vesselID, timeData[locationIndex])
+        locationData = DataProcessing().getLocationData(vesselID, timeData[:locationIndex+1])
+        remoteIndexColor, targetmmsi, distance = DataProcessing().getRemoteIndexColor(vesselID, timeData[locationIndex])
 
-        # plotting communities data
-        communitiesData = DataProcessing().getCommunitiesData()
-        map = DataProjection().drawCommunitiesMarker(map, communitiesData)
+        map = folium.Map(location=locationData[-1], zoom_start=4, prefer_canvas=True)
+        DataProjection(color='black', weight=4).drawPolyLine(map, locationData, vesselID)
+
+        map = DataProjection().drawCommunitiesMarker(map, communityData)
+        map = DataProjection().drawCommunitiesMarker(map, trafficData, color='orange', layername='Vessels')
+
+        folium.Marker(locationData[-1], tooltip="<b>You are here:</b> {:.4f}, {:.4f} <br><b>TargetMMSI</b>: {} <br><b>Distance</b>: {} km".
+                      format(locationData[-1][0], locationData[-1][1], targetmmsi, distance),
+                      icon=folium.Icon(color=remoteIndexColor)).add_to(map)
+
         folium.LayerControl().add_to(map)
 
         map.save('foliumApp/static/mapResults.html')

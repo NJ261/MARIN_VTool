@@ -1,4 +1,4 @@
-from foliumApp.models import Communities, MarineTrafficData, Grids, Results
+from foliumApp.models import Communities, MarineTrafficData, Grids, Results, UniqueMMSI
 
 import geocoder, json
 
@@ -55,34 +55,55 @@ class DataProcessing:
                 data[i][0], data[i][1] = data[i][1], data[i][0]
         return data
 
-    def getTimeDuration(self, vesselID):
+    def getTimeDuration(self, sourcemmsi):
         data = []
-        result = Results.objects.filter(vesselid=vesselID)
+        result = Results.objects.filter(sourcemmsi=sourcemmsi)
+        uniqueDates = result.values('sourcedate').distinct().order_by('sourcedate')
+        for i in range(0, len(uniqueDates)):
+            uniqueTimeValues = result.filter(sourcedate=uniqueDates[i]['sourcedate']).values('sourcetime').distinct().order_by('sourcetime')
+            for j in range(0, len(uniqueTimeValues)):
+                data.append(uniqueDates[i]['sourcedate'] + ' ' + uniqueTimeValues[j]['sourcetime'])
+        return data
+
+    def getTrafficData(self, sourcemmsi, locationIndex):
+        communities, vesselTraffic = [], []
+        dateTime = locationIndex.split()
+        result = Results.objects.filter(sourcemmsi=sourcemmsi).filter(sourcedate=dateTime[0]).filter(sourcetime=dateTime[1])
         for i in range(0, len(result)):
-            data.append(result[i].time)
-        return data
+            targetName = result[i].targetmmsi.replace(" ", "") # removing space to check whether it is community
+            if (targetName.isalpha() == True):
+                communities.append([result[i].targetmmsi,[float(result[i].targetlng), float(result[i].targetlat)]])
+            else:
+                vesselTraffic.append([result[i].targetmmsi,[float(result[i].targetlng), float(result[i].targetlat)]])
+        return communities, vesselTraffic
 
-    def getLocationData(self, vesselID, locationIndex):
-        data = []
-        result = Results.objects.filter(vesselid=vesselID)
-        for i in range(0, locationIndex):
-            data.append([float(result[i].lat), float(result[i].lng)])
-        return data
+    def getLocationData(self, sourcemmsi, dateTimeData):
+        locationData = []
+        for i in range(0, len(dateTimeData)):
+            dateTime = dateTimeData[i].split()
+            result = Results.objects.filter(sourcemmsi=sourcemmsi).filter(sourcedate=dateTime[0]).filter(sourcetime=dateTime[1]).first()
+            locationData.append([result.sourcelng, result.sourcelat])
+        return locationData
 
-    def getRemoteIndexColor(self, vesselID, locationIndex):
-        result = Results.objects.filter(vesselid=vesselID)
-        remoteIndex = int(result[locationIndex - 1].remoteindex)
-        if remoteIndex == 1:
+    def getRemoteIndexColor(self, sourcemmsi, currentDateTime):
+        dateTime = currentDateTime.split()
+        result = Results.objects.filter(sourcemmsi=sourcemmsi).filter(sourcedate=dateTime[0]).filter(sourcetime=dateTime[1])
+        minDistance = result.filter(minimum=True).values('distance').distinct().first()
+        minDistance = float(minDistance['distance']) / 1000 #dividing distance by 1000 km
+        if minDistance <= 1:
             color = 'darkgreen'
-        elif remoteIndex == 2:
+        elif minDistance >= 2:
             color = 'lightred'
         else:
             color = 'red'
-        return color
+
+        targetmmsi = result.filter(minimum=True).values('targetmmsi').distinct().first()
+        targetmmsi = targetmmsi['targetmmsi']
+        return color, targetmmsi, minDistance * 1000
 
     def getVesselNamesList(self):
         vesselNamesList = []
-        result = Results.objects.order_by().values('vesselid').distinct()
+        result = UniqueMMSI.objects.order_by().values('sourcemmsi').distinct()
         for i in range(0, len(result)):
-            vesselNamesList.append(result[i]['vesselid'])
+            vesselNamesList.append(result[i]['sourcemmsi'])
         return vesselNamesList

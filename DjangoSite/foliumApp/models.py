@@ -3,18 +3,38 @@ from django.contrib.gis.db import models
 class Results(models.Model):
 
     ogc_fid = models.IntegerField(primary_key=True)
-    vesselid = models.CharField(max_length=50)
-    time = models.CharField(max_length=50)
-    lat = models.CharField(max_length=50)
-    lng = models.CharField(max_length=50)
-    remoteindex = models.CharField(max_length=50)
+    sourcemmsi = models.CharField(max_length=50)
+    targetmmsi = models.CharField(max_length=50)
+    sourcedate = models.CharField(max_length=50)
+    sourcetime = models.CharField(max_length=50)
+    targetdate = models.CharField(max_length=50)
+    targettime = models.CharField(max_length=50)
+    sourcelat = models.FloatField()
+    sourcelng = models.FloatField()
+    targetlat = models.FloatField()
+    targetlng = models.FloatField()
+    sourcemstrid = models.CharField(max_length=50)
+    targetmstrid = models.CharField(max_length=50)
+    distance = models.FloatField()
+    minimum = models.CharField(max_length=50)
+    predictedpath = models.CharField(max_length=50)
 
     class Meta:
-        db_table = 'sampleresults'
+        db_table = 'processed_nwp_data'
 
     # Returns the string representation of the model.
     def __str__(self):
-        return self.vesselid
+        return self.sourcemmsi
+
+class UniqueMMSI(models.Model):
+    ogc_fid = models.IntegerField(primary_key=True)
+    sourcemmsi = models.CharField(max_length=50)
+
+    class Meta:
+        db_table = 'unique_mmsi'
+
+    def __str__(self):
+        return self.sourcemmsi
 
 class Communities(models.Model):
     # TODO: DB description needed here.

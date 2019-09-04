@@ -73,12 +73,13 @@ class DataProjection:
 
         return map
 
-    def drawCommunitiesMarker(self, map, data):
+    def drawCommunitiesMarker(self, map, data, **kwargs):
         # TODO: need to work here on icon: type, shape, size and color
-
-        featureGroup = folium.FeatureGroup(name='Communities')
+        self.color = kwargs.get('color', 'blue')
+        self.layerName = kwargs.get('layername', 'Community')
+        featureGroup = folium.FeatureGroup(name=self.layerName)
         for i in range(0, len(data)):
-            folium.Marker(location=data[i][1], tooltip='Community Name: {}'.format(data[i][0]), icon=folium.Icon(color='blue')).add_to(featureGroup)
+            folium.Marker(location=data[i][1], tooltip='{} Name: {}'.format(self.layerName, data[i][0]), icon=folium.Icon(color=self.color)).add_to(featureGroup)
         featureGroup.add_to(map)
         return map
 
