@@ -70,6 +70,8 @@ It removes land from on-shore cells and gives the water region.
 
 Here, inputs should be in pandas dataframe (for grids and land data).
 The output will be in pandas dataframe. Also, change CRS for land, it is 'epsg:3571' by default, change it with 'sourceCRS'.
+
+Interface [IRemoveLandFromGridCells](IRemoveLandFromGridCells.py) has configured methods for this class.
 ```python
 import RemoveLandFromGridCells
 
