@@ -23,6 +23,7 @@ class DataProjection:
         self.weight = kwargs.get('weight', 2)
         self.opacity = kwargs.get('opacity', 1)
 
+    # Redundant - for reference
     def addGeoJsonLayer(self, map, data, layerName):
         '''
         Description:
@@ -73,6 +74,7 @@ class DataProjection:
 
         return map
 
+    # draw marker for community and vessels traffic
     def drawCommunitiesMarker(self, map, data, **kwargs):
         # TODO: need to work here on icon: type, shape, size and color
         self.color = kwargs.get('color', 'blue')
@@ -83,8 +85,8 @@ class DataProjection:
         featureGroup.add_to(map)
         return map
 
+    # Redundant - for reference
     def drawGrids(self, map, data):
-
         featureGroup = folium.FeatureGroup(name='Grids')
         folium.Polygon(data, color=self.color).add_to(featureGroup)
         featureGroup.add_to(map)

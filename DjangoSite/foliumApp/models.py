@@ -1,5 +1,6 @@
 from django.contrib.gis.db import models
 
+# processed_nwp_data table, for result page
 class Results(models.Model):
 
     ogc_fid = models.IntegerField(primary_key=True)
@@ -26,6 +27,7 @@ class Results(models.Model):
     def __str__(self):
         return self.sourcemmsi
 
+# unique_mmsi for main page
 class UniqueMMSI(models.Model):
     ogc_fid = models.IntegerField(primary_key=True)
     sourcemmsi = models.CharField(max_length=50)
@@ -36,6 +38,7 @@ class UniqueMMSI(models.Model):
     def __str__(self):
         return self.sourcemmsi
 
+# communities table for main page
 class Communities(models.Model):
     # TODO: DB description needed here.
 
@@ -61,34 +64,3 @@ class Communities(models.Model):
 
     def __str__(self):
         return self.name
-
-class MarineTrafficData(models.Model):
-    # TODO: DB description needed here.
-
-    name = models.CharField(max_length=50, primary_key=True)
-    geom = models.MultiPolygonField()
-
-    class Meta:
-        db_table = 'marine_traffic_2010_data'
-
-    def __str__(self):
-        return self.name
-
-class Grids(models.Model):
-    # TODO: DB description needed here.
-
-    id = models.IntegerField(primary_key=True)
-    mstrid = models.FloatField()
-    f_p = models.FloatField()
-    f1_p = models.FloatField()
-    f2_p = models.FloatField()
-    f3_p = models.FloatField()
-    f4_p = models.FloatField()
-    grid0_1 = models.FloatField()
-    geom = models.MultiPolygonField()
-
-    class Meta:
-        db_table = 'amtgrids'
-
-    def __str__(self):
-        return self.id

@@ -41,7 +41,7 @@ class GetNWPData:
         connection = self.dbConnection.getConnection()
         cursor = connection.cursor()
 
-        cursor.execute("select * from nwp_data;")
+        cursor.execute("select * from processednwpdata limit 500 offset 5000;")
         for row in cursor:
             nwpData.append(row)
 

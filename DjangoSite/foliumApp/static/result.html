@@ -10,6 +10,7 @@
 </head>
 <body>
 
+<!-- Navigation bar -->
 <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
         <nav>
@@ -25,10 +26,14 @@
 <div id="main">
     <button class="openbtn" onclick="openNav()">☰ MARIN_VTool</button>
 
+    <!-- map as iframe -->
     <iframe id="iframe" src='{% url 'mapsResult' %}' scrolling="no"></iframe>
 
+    <!-- slider -->
     <div class="slidecontainer">
         <div class="mbsc-form-group-inset">
+
+            <!-- Hidden input (form) to submit user's input back to django back-end -->
             <form action="/remoteness/{{ vesselID }}/" method="post" id="form" name="form">
                 {% csrf_token %}
                 <input type="hidden" name="hiddenValue" value="" id="hiddenValue">

@@ -128,6 +128,7 @@
 </head>
 <body>
 
+<!-- Navigation bar -->
 <div id="mySidebar" class="sidebar">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
     <nav>
@@ -157,15 +158,7 @@
 
 
 <script>
-function openNav() {
-    document.getElementById("mySidebar").style.width = "250px";
-    document.getElementById("main").style.marginLeft = "250px";
-}
-
-function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("main").style.marginLeft= "0";
-}
+    {% include "JS/sidebar.js" %}
 </script>
 </body>
 </html>
