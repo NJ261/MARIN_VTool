@@ -106,9 +106,9 @@ class DataProcessing:
         # distance / 1000 km is less than 1 then remoteness color: red, if it is between 1 to 2 then lightred, otherwise it would be red
         if minDistance <= 1:
             color = 'darkgreen'
-        elif minDistance >= 2:
+        elif 1 < minDistance <= 2:
             color = 'lightred'
-        else:
+        elif minDistance > 2:
             color = 'red'
 
         # getting target mmsi respected to minimum distance row
