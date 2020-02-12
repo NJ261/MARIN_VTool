@@ -1,4 +1,4 @@
-Django==2.2.1
+Django==2.2.10
 folium==0.9.1
 psycopg2>=2.7,<3.0
 numpy
