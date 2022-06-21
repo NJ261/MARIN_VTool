@@ -1,6 +1,6 @@
 psycopg2
 pandas==0.24.2
-numpy==1.16.2
+numpy==1.22.0
 Shapely==1.6.4.post2
 pyproj==1.9.6
 ipython
